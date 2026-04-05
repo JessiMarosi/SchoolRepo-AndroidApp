@@ -3,7 +3,7 @@
 
 This repository contains the outline and planning materials for my Android app project. The planned app is a meal-planning application designed to help users organize meals, plan meals, and track daily calorie intake.
 
-👉 See the Wiki for the full project outline and development updates.
+See the Wiki for the full project outline and development updates.
 
 ---
 
