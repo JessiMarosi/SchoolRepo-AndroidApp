@@ -1,146 +1,277 @@
-# SchoolRepo-AndroidApp  
-**Spring 2 - 2026 Android App Project**
+# SchoolRepo-AndroidApp
 
-This repository contains the outline and planning materials for my Android app project. The planned app is a meal-planning application designed to help users organize meals, plan meals, and track daily calorie intake.
-
-See the Wiki for the full project outline and development updates.
+Spring 2 - 2026 Android App Project
 
 ---
 
-## Android App Project Outline
+## Project Overview
 
-### Project Description
-This project is a native Android application designed to help users plan meals and track daily calorie intake in a simple and organized way. The app focuses on usability and consistency, giving users one place to manage their meals without unnecessary complexity.
+This repository contains the full development documentation, source code, and planning materials for **DailyDish**, a native Android meal tracking application developed for COM-437 Mobile Application Development.
 
----
+DailyDish is designed to help users track meals, monitor nutritional intake, and review short-term dietary trends through a simple and user-friendly interface.
 
-### Problem Addressed
-Many people struggle to stay consistent with dieting because meal planning can feel overwhelming or disorganized. This app simplifies that process by allowing users to easily enter meals, track calories, and view their daily plan.
+See the Wiki for full project documentation and development updates.
 
 ---
 
-### Platform
-- Native Android application  
-- Developed using Android Studio  
+## Project Description
+
+DailyDish is a native Android application that allows users to:
+
+* Track meals throughout the day
+* Monitor nutrition and beverage intake
+* View calculated dietary statistics
+* Manage meals through full CRUD functionality
+* Review weekly, monthly, and annual summaries
+
+The app was built with a focus on usability, modular design, and privacy-conscious local data storage.
 
 ---
 
-### Functionality
-- Add meals for breakfast, lunch, dinner, and snacks  
-- Track calories for each meal  
-- View daily meal plans  
-- View total daily calorie intake  
-- Edit or remove meals  
+## Problem Addressed
+
+Many meal-tracking apps become overly complex, cluttered, or difficult to maintain consistently. DailyDish addresses this issue by providing:
+
+* A clean and intuitive interface
+* Fast meal entry and editing
+* Simple nutritional tracking
+* Automated statistics generation
+* Limited data retention for improved privacy
 
 ---
 
-### Design (Wireframes Concept)
-The app uses a clean and simple layout focused on ease of use.
+## Platform / Development Environment
 
-**Main Screens:**
-- Daily view screen showing meals and total calories  
-- Meal entry screen for adding new meals  
-- Simple navigation with minimal user friction  
-
----
-
-### App Structure (Planned)
-
-#### Screens
-
-**Main Screen (Daily View)**
-- Displays all meals for the day  
-- Shows total calories  
-
-**Add Meal Screen**
-- Input meal type  
-- Input food name  
-- Input calorie value  
-- Save meal  
-
-**Meal List / Management**
-- View all meals entered  
-- Edit or delete meals  
+* Native Android Application
+* Developed using Android Studio
+* Programming Language: Java
+* User Interface: XML Layouts
 
 ---
 
-### Data Model (Planned)
-Each meal entry includes:
-- Meal ID  
-- Meal name  
-- Meal category (breakfast, lunch, dinner, snack)  
-- Calories  
-- Date  
+## Core Functionality
+
+### Meal Management (CRUD)
+
+Users can:
+
+* Add meals
+* Edit existing meals
+* Delete meals
 
 ---
 
-## Module 2 Progress Update
-During Module 2, the project progressed from concept into initial development setup.
+### Nutrition Tracking
 
-### Updates Include:
-- Confirmed Android Studio as the required development environment  
-- Created the initial Android project  
-- Refined app structure and functionality  
-- Began organizing how screens and features will be implemented  
+Each meal records:
 
-Due to limited access to uCertify materials, progress was based on project instructions and development planning.
+* Calories
+* Protein (g)
+* Carbohydrates (g)
+* Sugar (g)
+* Fat (g)
+* Water Intake (oz)
+* Soda Intake (oz)
 
 ---
 
-## Module 5 Progress Update
-In Module 5, the project continued development by refining the app structure and preparing for implementation and repository updates.
+### Daily Dashboard
 
-### Updates Include:
-- Reviewed and improved the overall app design and structure  
-- Expanded wireframe details to better reflect user flow  
-- Organized screens and navigation flow more clearly  
-- Prepared project for GitHub repository updates  
-- Continued planning for database integration and functionality implementation  
+Main screen displays:
 
-This phase focused on improving clarity, usability, and preparing the app for final development and submission.
+* Current date
+* Daily meal list
+* Daily nutritional totals
+
+---
+
+### Statistics Tracking
+
+Statistics page calculates:
+
+* Weekly totals
+* Monthly totals
+* Annual totals
+
+---
+
+## Application Structure
+
+### MainActivity
+
+Responsible for:
+
+* Displaying current day meal totals
+* Displaying saved meals
+* Navigation to Add/Edit Meal and Statistics
+
+---
+
+### AddMealActivity
+
+Responsible for:
+
+* Adding new meals
+* Editing existing meals
+* Canceling entry and returning home
+
+---
+
+### StatisticsActivity
+
+Responsible for:
+
+* Displaying aggregated statistics
+* Returning user to home screen
+
+---
+
+## Data Model
+
+Each meal entry contains:
+
+* Meal Name
+* Category
+* Calories
+* Protein
+* Carbs
+* Sugar
+* Fat
+* Water
+* Soda
+* Date
+
+---
+
+## Data Storage Approach
+
+DailyDish currently uses:
+
+* **SharedPreferences local storage**
+
+Benefits of this approach:
+
+* Lightweight implementation
+* Fast read/write performance
+* Ideal for smaller applications
+* No internet/server dependency
+
+---
+
+## Data Retention Policy
+
+To support privacy-conscious development practices:
+
+* Meal data is retained for **30 days only**
+* Records older than 30 days are automatically removed
+* This minimizes unnecessary long-term storage of user behavioral data
+
+---
+
+## UI / UX Design Philosophy
+
+The app was designed around the following principles:
+
+* Simplicity
+* Readability
+* Minimal user friction
+* Clear navigation
+* Fast interaction flow
+
+Design includes:
+
+* Card-based layouts
+* Scrollable forms
+* Clearly labeled nutritional fields
+* Consistent button styling
+
+---
+
+## Architecture / Design Concepts Applied
+
+DailyDish follows Android development best practices including:
+
+* Separation of concerns
+* Modular activity-based architecture
+* Lifecycle-aware design principles
+* Structured UI-to-data flow
 
 ---
 
 ## Version Changelog
 
-### Version 1.0 – Initial Concept (Module 1–2)
-- Created initial project idea (Meal Planning App)  
-- Defined problem and solution  
-- Selected Android Studio as development environment  
-- Established core functionality (meal tracking, calorie tracking)  
-- Designed basic app structure and data model  
+### Version 1.0 – Initial Concept
+
+* Created project concept
+* Defined app purpose/problem
+* Planned core features
 
 ---
 
-### Version 2.0 – Structure & Design (Module 3–4)
-- Expanded app functionality and features  
-- Developed detailed wireframes  
-- Defined navigation structure and user flow  
-- Improved UI/UX planning  
-- Organized screens (Home, Planner, Grocery, Recipes)  
+### Version 2.0 – Design / Wireframes
+
+* Built wireframes
+* Designed UI structure
+* Planned navigation and data model
 
 ---
 
-### Version 3.0 – Current Progress (Module 5)
-- Refined app layout and usability  
-- Improved project organization and documentation  
-- Prepared GitHub repository for updates  
-- Structured app for easier implementation  
-- Finalized planning for core features and navigation  
+### Version 3.0 – Core Development
+
+* Built functional Android application
+* Implemented CRUD operations
+* Added nutritional tracking
+* Added persistent local storage
 
 ---
 
-### Version 4.0 – Future Updates (Module 6–8)
-- Implement full app functionality in Android Studio  
-- Connect UI to backend/data storage (SQLite or similar)  
-- Complete CRUD operations (add, edit, delete meals)  
-- Finalize GitHub repository with working code  
-- Update README with full project documentation  
-- Prepare final submission  
+### Version 4.0 – UI/UX Enhancements
+
+* Improved design consistency
+* Added cancel/home navigation buttons
+* Refined layouts and scrolling
 
 ---
 
-## Future Enhancements (Post-Project)
-- Improved UI/UX design  
-- Additional tracking features (optional)  
-- Potential expansion of functionality  
+### Version 5.0 – Privacy/Data Improvements
+
+* Added 30-day retention model
+* Improved privacy-conscious data handling
+* Limited unnecessary long-term data storage
+
+---
+
+## Future Enhancements
+
+Potential future improvements include:
+
+* SQLite database migration
+* Cloud synchronization
+* User authentication
+* Graph/chart visualization
+* Recipe integration
+* Grocery list support
+
+---
+
+## GitHub Wiki
+
+Project documentation and instructional guides can be found here:
+
+**Wiki:**
+https://github.com/JessiMarosi/SchoolRepo-AndroidApp/wiki
+
+---
+
+## Summary
+
+DailyDish demonstrates the practical application of Android mobile development principles including:
+
+* UI/UX design
+* CRUD implementation
+* Data persistence
+* Modular architecture
+* Documentation/version control
+* Privacy-conscious application design
+
+The project evolved from concept and wireframes into a fully functioning Android application that reflects real-world software development practices.
