@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_EDIT_MEAL = 2;
     private static final String PREFS_NAME = "DailyDishPrefs";
     private static final String MEALS_KEY = "meals_json";
+    private static final int RETENTION_DAYS = 30;
 
     private TextView tvCurrentDate;
     private TextView tvTotalCalories;
@@ -216,6 +218,46 @@ public class MainActivity extends AppCompatActivity {
         return sdf.format(new Date());
     }
 
+    private Date parseStorageDate(String dateString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            sdf.setLenient(false);
+            return sdf.parse(dateString);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private boolean isWithinRetentionWindow(String dateString) {
+        Date mealDate = parseStorageDate(dateString);
+        if (mealDate == null) {
+            return false;
+        }
+
+        Calendar cutoff = Calendar.getInstance();
+        cutoff.set(Calendar.HOUR_OF_DAY, 0);
+        cutoff.set(Calendar.MINUTE, 0);
+        cutoff.set(Calendar.SECOND, 0);
+        cutoff.set(Calendar.MILLISECOND, 0);
+        cutoff.add(Calendar.DAY_OF_YEAR, -RETENTION_DAYS);
+
+        return !mealDate.before(cutoff.getTime());
+    }
+
+    private boolean pruneExpiredMeals() {
+        boolean removedAny = false;
+
+        for (int i = mealsList.size() - 1; i >= 0; i--) {
+            Meal meal = mealsList.get(i);
+            if (!isWithinRetentionWindow(meal.getDate())) {
+                mealsList.remove(i);
+                removedAny = true;
+            }
+        }
+
+        return removedAny;
+    }
+
     private void updateUI() {
         int totalCalories = 0;
         int totalProtein = 0;
@@ -245,6 +287,10 @@ public class MainActivity extends AppCompatActivity {
                 displayList.add(meal.toString());
                 visibleMealIndexes.add(i);
             }
+        }
+
+        if (displayList.isEmpty()) {
+            displayList.add("No meals logged for today.");
         }
 
         tvCurrentDate.setText(getTodayDisplayDate());
@@ -293,31 +339,34 @@ public class MainActivity extends AppCompatActivity {
 
             mealsList.clear();
 
-            if (mealsJson == null || mealsJson.isEmpty()) {
-                return;
+            if (mealsJson != null && !mealsJson.isEmpty()) {
+                JSONArray jsonArray = new JSONArray(mealsJson);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject mealObject = jsonArray.getJSONObject(i);
+
+                    String name = mealObject.optString("name", "");
+                    String category = mealObject.optString("category", "");
+                    int calories = mealObject.optInt("calories", 0);
+                    int protein = mealObject.optInt("protein", 0);
+                    int carbs = mealObject.optInt("carbs", 0);
+                    int sugar = mealObject.optInt("sugar", 0);
+                    int fat = mealObject.optInt("fat", 0);
+                    int waterOz = mealObject.optInt("waterOz", 0);
+                    int sodaOz = mealObject.optInt("sodaOz", 0);
+                    String date = mealObject.optString("date", getTodayStorageDate());
+
+                    mealsList.add(new Meal(name, category, calories, protein, carbs, sugar, fat, waterOz, sodaOz, date));
+                }
             }
 
-            JSONArray jsonArray = new JSONArray(mealsJson);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject mealObject = jsonArray.getJSONObject(i);
-
-                String name = mealObject.optString("name", "");
-                String category = mealObject.optString("category", "");
-                int calories = mealObject.optInt("calories", 0);
-                int protein = mealObject.optInt("protein", 0);
-                int carbs = mealObject.optInt("carbs", 0);
-                int sugar = mealObject.optInt("sugar", 0);
-                int fat = mealObject.optInt("fat", 0);
-                int waterOz = mealObject.optInt("waterOz", 0);
-                int sodaOz = mealObject.optInt("sodaOz", 0);
-                String date = mealObject.optString("date", getTodayStorageDate());
-
-                mealsList.add(new Meal(name, category, calories, protein, carbs, sugar, fat, waterOz, sodaOz, date));
+            boolean removedAny = pruneExpiredMeals();
+            if (removedAny) {
+                saveMeals();
             }
 
         } catch (Exception e) {
-            Toast.makeText(this, "Error loading saved meals.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error loading meals.", Toast.LENGTH_SHORT).show();
         }
     }
 }
