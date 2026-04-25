@@ -66,10 +66,10 @@
             android:id="@+id/tvTotalCalories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="4dp"
             android:text="Calories: 0"
-            android:textColor="#2E1A47"
-            android:textSize="28sp"
+            android:textColor="#3F3154"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
@@ -163,7 +163,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:backgroundTint="#8A74B9"
-        android:text="Edit Selected Meal"
+        android:text="Edit Meal"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
@@ -174,7 +174,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:backgroundTint="#B24C63"
-        android:text="Delete Selected Meal"
+        android:text="Delete Meal"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />

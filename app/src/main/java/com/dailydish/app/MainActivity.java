@@ -1,9 +1,9 @@
 package com.dailydish.app;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -89,8 +89,22 @@ public class MainActivity extends AppCompatActivity {
         lvMeals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         lvMeals.setOnItemClickListener((parent, view, position, id) -> {
-            selectedVisibleIndex = position;
-            lvMeals.setItemChecked(position, true);
+            if (visibleMealIndexes.isEmpty()) {
+                selectedVisibleIndex = -1;
+                lvMeals.clearChoices();
+                adapter.notifyDataSetChanged();
+                return;
+            }
+
+            if (selectedVisibleIndex == position) {
+                selectedVisibleIndex = -1;
+                lvMeals.clearChoices();
+            } else {
+                selectedVisibleIndex = position;
+                lvMeals.setItemChecked(position, true);
+            }
+
+            adapter.notifyDataSetChanged();
         });
 
         btnAddMeal.setOnClickListener(v -> {
@@ -120,14 +134,22 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            int actualIndex = visibleMealIndexes.get(selectedVisibleIndex);
-            mealsList.remove(actualIndex);
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Delete Meal")
+                    .setMessage("Are you sure you want to delete this meal?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        int actualIndex = visibleMealIndexes.get(selectedVisibleIndex);
+                        mealsList.remove(actualIndex);
 
-            selectedVisibleIndex = -1;
-            lvMeals.clearChoices();
-            saveMeals();
-            updateUI();
-            Toast.makeText(MainActivity.this, "Meal deleted.", Toast.LENGTH_SHORT).show();
+                        selectedVisibleIndex = -1;
+                        lvMeals.clearChoices();
+                        saveMeals();
+                        updateUI();
+
+                        Toast.makeText(MainActivity.this, "Meal deleted.", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
 
         btnStatistics.setOnClickListener(v -> {
@@ -212,10 +234,13 @@ public class MainActivity extends AppCompatActivity {
                     sodaOz,
                     getTodayStorageDate()
             );
+
             mealsList.add(meal);
             Toast.makeText(this, "Meal added.", Toast.LENGTH_SHORT).show();
+
         } else if (requestCode == REQUEST_CODE_EDIT_MEAL) {
             int mealIndex = data.getIntExtra("mealIndex", -1);
+
             if (mealIndex >= 0 && mealIndex < mealsList.size()) {
                 Meal existingMeal = mealsList.get(mealIndex);
 
@@ -248,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
             if (value == null || value.trim().isEmpty()) {
                 return 0;
             }
+
             return Integer.parseInt(value.trim());
         } catch (Exception e) {
             return 0;
@@ -255,53 +281,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getTodayStorageDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        return sdf.format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
     }
 
     private String getTodayDisplayDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.US);
-        return sdf.format(new Date());
-    }
-
-    private Date parseStorageDate(String dateString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            sdf.setLenient(false);
-            return sdf.parse(dateString);
-        } catch (Exception e) {
-            return null;
-        }
+        return new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.US).format(new Date());
     }
 
     private boolean isWithinRetentionWindow(String dateString) {
-        Date mealDate = parseStorageDate(dateString);
-        if (mealDate == null) {
+        try {
+            Date mealDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(dateString);
+
+            Calendar cutoff = Calendar.getInstance();
+            cutoff.set(Calendar.HOUR_OF_DAY, 0);
+            cutoff.set(Calendar.MINUTE, 0);
+            cutoff.set(Calendar.SECOND, 0);
+            cutoff.set(Calendar.MILLISECOND, 0);
+            cutoff.add(Calendar.DAY_OF_YEAR, -RETENTION_DAYS);
+
+            return mealDate != null && !mealDate.before(cutoff.getTime());
+
+        } catch (Exception e) {
             return false;
         }
-
-        Calendar cutoff = Calendar.getInstance();
-        cutoff.set(Calendar.HOUR_OF_DAY, 0);
-        cutoff.set(Calendar.MINUTE, 0);
-        cutoff.set(Calendar.SECOND, 0);
-        cutoff.set(Calendar.MILLISECOND, 0);
-        cutoff.add(Calendar.DAY_OF_YEAR, -RETENTION_DAYS);
-
-        return !mealDate.before(cutoff.getTime());
     }
 
     private boolean pruneExpiredMeals() {
-        boolean removedAny = false;
+        boolean removed = false;
 
         for (int i = mealsList.size() - 1; i >= 0; i--) {
-            Meal meal = mealsList.get(i);
-            if (!isWithinRetentionWindow(meal.getDate())) {
+            if (!isWithinRetentionWindow(mealsList.get(i).getDate())) {
                 mealsList.remove(i);
-                removedAny = true;
+                removed = true;
             }
         }
 
-        return removedAny;
+        return removed;
     }
 
     private void updateUI() {
@@ -318,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         displayList.clear();
         visibleMealIndexes.clear();
 
-        for (int i = 0; i < mealsList.size(); i++) {
+        for (int i = mealsList.size() - 1; i >= 0; i--) {
             Meal meal = mealsList.get(i);
 
             if (today.equals(meal.getDate())) {
@@ -336,10 +351,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (displayList.isEmpty()) {
-            displayList.add("No meals logged for today.");
+            selectedVisibleIndex = -1;
+            lvMeals.clearChoices();
+            displayList.add("No meals logged yet for today.\nTap \"Add Meal\" to get started!");
         }
 
         tvCurrentDate.setText(getTodayDisplayDate());
+
         tvTotalCalories.setText("Calories: " + totalCalories);
         tvTotalProtein.setText("Protein: " + totalProtein + " g");
         tvTotalCarbs.setText("Carbs: " + totalCarbs + " g");
@@ -356,22 +374,26 @@ public class MainActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray();
 
             for (Meal meal : mealsList) {
-                JSONObject mealObject = new JSONObject();
-                mealObject.put("name", meal.getName());
-                mealObject.put("category", meal.getCategory());
-                mealObject.put("calories", meal.getCalories());
-                mealObject.put("protein", meal.getProtein());
-                mealObject.put("carbs", meal.getCarbs());
-                mealObject.put("sugar", meal.getSugar());
-                mealObject.put("fat", meal.getFat());
-                mealObject.put("waterOz", meal.getWaterOz());
-                mealObject.put("sodaOz", meal.getSodaOz());
-                mealObject.put("date", meal.getDate());
-                jsonArray.put(mealObject);
+                JSONObject obj = new JSONObject();
+
+                obj.put("name", meal.getName());
+                obj.put("category", meal.getCategory());
+                obj.put("calories", meal.getCalories());
+                obj.put("protein", meal.getProtein());
+                obj.put("carbs", meal.getCarbs());
+                obj.put("sugar", meal.getSugar());
+                obj.put("fat", meal.getFat());
+                obj.put("waterOz", meal.getWaterOz());
+                obj.put("sodaOz", meal.getSodaOz());
+                obj.put("date", meal.getDate());
+
+                jsonArray.put(obj);
             }
 
-            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-            prefs.edit().putString(MEALS_KEY, jsonArray.toString()).apply();
+            getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                    .edit()
+                    .putString(MEALS_KEY, jsonArray.toString())
+                    .apply();
 
         } catch (Exception e) {
             Toast.makeText(this, "Error saving meals.", Toast.LENGTH_SHORT).show();
@@ -380,8 +402,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadMeals() {
         try {
-            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-            String mealsJson = prefs.getString(MEALS_KEY, "");
+            String mealsJson = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                    .getString(MEALS_KEY, "");
 
             mealsList.clear();
 
@@ -389,25 +411,24 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(mealsJson);
 
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject mealObject = jsonArray.getJSONObject(i);
+                    JSONObject o = jsonArray.getJSONObject(i);
 
-                    String name = mealObject.optString("name", "");
-                    String category = mealObject.optString("category", "");
-                    int calories = mealObject.optInt("calories", 0);
-                    int protein = mealObject.optInt("protein", 0);
-                    int carbs = mealObject.optInt("carbs", 0);
-                    int sugar = mealObject.optInt("sugar", 0);
-                    int fat = mealObject.optInt("fat", 0);
-                    int waterOz = mealObject.optInt("waterOz", 0);
-                    int sodaOz = mealObject.optInt("sodaOz", 0);
-                    String date = mealObject.optString("date", getTodayStorageDate());
-
-                    mealsList.add(new Meal(name, category, calories, protein, carbs, sugar, fat, waterOz, sodaOz, date));
+                    mealsList.add(new Meal(
+                            o.optString("name"),
+                            o.optString("category"),
+                            o.optInt("calories"),
+                            o.optInt("protein"),
+                            o.optInt("carbs"),
+                            o.optInt("sugar"),
+                            o.optInt("fat"),
+                            o.optInt("waterOz"),
+                            o.optInt("sodaOz"),
+                            o.optString("date", getTodayStorageDate())
+                    ));
                 }
             }
 
-            boolean removedAny = pruneExpiredMeals();
-            if (removedAny) {
+            if (pruneExpiredMeals()) {
                 saveMeals();
             }
 
