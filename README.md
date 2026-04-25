@@ -1,4 +1,4 @@
-# SchoolRepo-AndroidApp
+# SchoolRepo-AndroidApp: Daily Dish
 
 Spring 2 - 2026 Android App Project
 
@@ -18,11 +18,12 @@ See the Wiki for full project documentation and development updates.
 
 DailyDish is a native Android application that allows users to:
 
-* Track meals throughout the day
-* Monitor nutrition and beverage intake
-* View calculated dietary statistics
-* Manage meals through full CRUD functionality
-* Review weekly, monthly, and annual summaries
+* Track meals throughout the day  
+* Monitor nutrition and beverage intake  
+* View calculated dietary statistics  
+* Manage meals through full CRUD functionality  
+* Review weekly, monthly, and annual summaries  
+* Personalize their experience with themes and user preferences  
 
 The app was built with a focus on usability, modular design, and privacy-conscious local data storage.
 
@@ -32,20 +33,21 @@ The app was built with a focus on usability, modular design, and privacy-conscio
 
 Many meal-tracking apps become overly complex, cluttered, or difficult to maintain consistently. DailyDish addresses this issue by providing:
 
-* A clean and intuitive interface
-* Fast meal entry and editing
-* Simple nutritional tracking
-* Automated statistics generation
-* Limited data retention for improved privacy
+* A clean and intuitive interface  
+* Fast meal entry and editing  
+* Simple nutritional tracking  
+* Automated statistics generation  
+* Limited data retention for improved privacy  
+* Lightweight personalization without complexity  
 
 ---
 
 ## Platform / Development Environment
 
-* Native Android Application
-* Developed using Android Studio
-* Programming Language: Java
-* User Interface: XML Layouts
+* Native Android Application  
+* Developed using Android Studio  
+* Programming Language: Java  
+* User Interface: XML Layouts  
 
 ---
 
@@ -55,9 +57,9 @@ Many meal-tracking apps become overly complex, cluttered, or difficult to mainta
 
 Users can:
 
-* Add meals
-* Edit existing meals
-* Delete meals
+* Add meals  
+* Edit existing meals  
+* Delete meals (with confirmation dialog for safety)  
 
 ---
 
@@ -65,13 +67,13 @@ Users can:
 
 Each meal records:
 
-* Calories
-* Protein (g)
-* Carbohydrates (g)
-* Sugar (g)
-* Fat (g)
-* Water Intake (oz)
-* Soda Intake (oz)
+* Calories  
+* Protein (g)  
+* Carbohydrates (g)  
+* Sugar (g)  
+* Fat (g)  
+* Water Intake (oz)  
+* Soda Intake (oz)  
 
 ---
 
@@ -79,9 +81,10 @@ Each meal records:
 
 Main screen displays:
 
-* Current date
-* Daily meal list
-* Daily nutritional totals
+* Current date  
+* Personalized greeting  
+* Daily meal list (newest first)  
+* Daily nutritional totals  
 
 ---
 
@@ -89,9 +92,61 @@ Main screen displays:
 
 Statistics page calculates:
 
-* Weekly totals
-* Monthly totals
-* Annual totals
+* Weekly totals  
+* Monthly totals  
+* Annual totals  
+
+---
+
+## New Enhancements (Version 6.0 – Personalization & UX Refinement)
+
+Recent improvements significantly enhanced usability, personalization, and UI polish:
+
+### User Personalization
+
+* One-time onboarding to capture user name  
+* Personalized greeting on home screen  
+* Personalized push notifications  
+
+---
+
+### Settings System
+
+* Dedicated Settings screen accessible via gear icon  
+* Edit username at any time  
+* Toggle daily notifications (on/off)  
+* Select color theme  
+
+---
+
+### Color Themes
+
+Users can dynamically select:
+
+* Purple Classic  
+* Blue Calm  
+* Green Fresh  
+* Rose Warm  
+
+Themes apply instantly and persist across sessions.
+
+---
+
+### Notification System
+
+* Daily reminder notifications  
+* Runtime permission handling (Android 13+)  
+* Personalized notification messages  
+
+---
+
+### UX Improvements
+
+* Delete confirmation dialog added  
+* Automatic meal deselection  
+* Improved meal list ordering (newest first)  
+* Consistent font sizing and alignment in Daily Totals  
+* Standard Android settings icon for familiarity  
 
 ---
 
@@ -101,9 +156,10 @@ Statistics page calculates:
 
 Responsible for:
 
-* Displaying current day meal totals
-* Displaying saved meals
-* Navigation to Add/Edit Meal and Statistics
+* Displaying current day meal totals  
+* Displaying saved meals  
+* Showing personalized greeting  
+* Navigation to Add/Edit, Statistics, and Settings  
 
 ---
 
@@ -111,9 +167,9 @@ Responsible for:
 
 Responsible for:
 
-* Adding new meals
-* Editing existing meals
-* Canceling entry and returning home
+* Adding new meals  
+* Editing existing meals  
+* Canceling entry and returning home  
 
 ---
 
@@ -121,8 +177,37 @@ Responsible for:
 
 Responsible for:
 
-* Displaying aggregated statistics
-* Returning user to home screen
+* Displaying aggregated statistics  
+* Returning user to home screen  
+
+---
+
+### OnboardingActivity
+
+Responsible for:
+
+* First-time user setup  
+* Capturing and storing username  
+
+---
+
+### SettingsActivity
+
+Responsible for:
+
+* Managing user preferences  
+* Updating username  
+* Toggling notifications  
+* Selecting color themes  
+
+---
+
+### ReminderReceiver
+
+Responsible for:
+
+* Handling scheduled notifications  
+* Personalizing notification messages  
 
 ---
 
@@ -130,16 +215,16 @@ Responsible for:
 
 Each meal entry contains:
 
-* Meal Name
-* Category
-* Calories
-* Protein
-* Carbs
-* Sugar
-* Fat
-* Water
-* Soda
-* Date
+* Meal Name  
+* Category  
+* Calories  
+* Protein  
+* Carbs  
+* Sugar  
+* Fat  
+* Water  
+* Soda  
+* Date  
 
 ---
 
@@ -149,52 +234,40 @@ DailyDish currently uses:
 
 * **SharedPreferences local storage**
 
-Benefits of this approach:
+Benefits:
 
-* Lightweight implementation
-* Fast read/write performance
-* Ideal for smaller applications
-* No internet/server dependency
+* Lightweight implementation  
+* Fast read/write performance  
+* No internet/server dependency  
+* Supports user personalization settings  
 
 ---
 
 ## Data Retention Policy
 
-To support privacy-conscious development practices:
-
-* Meal data is retained for **30 days only**
-* Records older than 30 days are automatically removed
-* This minimizes unnecessary long-term storage of user behavioral data
+* Meal data is retained for **30 days only**  
+* Older records are automatically removed  
+* Reduces unnecessary long-term storage of user behavior  
 
 ---
 
 ## UI / UX Design Philosophy
 
-The app was designed around the following principles:
+The app was designed around:
 
-* Simplicity
-* Readability
-* Minimal user friction
-* Clear navigation
-* Fast interaction flow
+* Simplicity  
+* Readability  
+* Minimal user friction  
+* Clear navigation  
+* Fast interaction flow  
 
 Design includes:
 
-* Card-based layouts
-* Scrollable forms
-* Clearly labeled nutritional fields
-* Consistent button styling
-
----
-
-## Architecture / Design Concepts Applied
-
-DailyDish follows Android development best practices including:
-
-* Separation of concerns
-* Modular activity-based architecture
-* Lifecycle-aware design principles
-* Structured UI-to-data flow
+* Card-based layouts  
+* Scrollable forms  
+* Clearly labeled nutritional fields  
+* Consistent button styling  
+* Dynamic theming  
 
 ---
 
@@ -202,76 +275,79 @@ DailyDish follows Android development best practices including:
 
 ### Version 1.0 – Initial Concept
 
-* Created project concept
-* Defined app purpose/problem
-* Planned core features
+* Defined app purpose  
+* Planned core features  
 
 ---
 
-### Version 2.0 – Design / Wireframes
+### Version 2.0 – Design
 
-* Built wireframes
-* Designed UI structure
-* Planned navigation and data model
+* Created wireframes  
+* Planned navigation and structure  
 
 ---
 
 ### Version 3.0 – Core Development
 
-* Built functional Android application
-* Implemented CRUD operations
-* Added nutritional tracking
-* Added persistent local storage
+* Implemented CRUD operations  
+* Added nutrition tracking  
+* Added local storage  
 
 ---
 
-### Version 4.0 – UI/UX Enhancements
+### Version 4.0 – UI Enhancements
 
-* Improved design consistency
-* Added cancel/home navigation buttons
-* Refined layouts and scrolling
+* Improved layouts and navigation  
+* Added cancel/home controls  
 
 ---
 
-### Version 5.0 – Privacy/Data Improvements
+### Version 5.0 – Privacy Improvements
 
-* Added 30-day retention model
-* Improved privacy-conscious data handling
-* Limited unnecessary long-term data storage
+* Implemented 30-day data retention  
+* Reduced long-term data storage  
+
+---
+
+### Version 6.0 – Personalization & UX Refinement
+
+* Added onboarding system  
+* Introduced settings screen  
+* Implemented color themes  
+* Added notification system  
+* Improved usability and UI consistency  
 
 ---
 
 ## Future Enhancements
 
-Potential future improvements include:
+Potential future improvements:
 
-* SQLite database migration
-* Cloud synchronization
-* User authentication
-* Graph/chart visualization
-* Recipe integration
-* Grocery list support
+* SQLite database migration  
+* Cloud synchronization  
+* User authentication  
+* Graph/chart visualization  
+* Recipe integration  
+* Grocery list support  
 
 ---
 
 ## GitHub Wiki
 
-Project documentation and instructional guides can be found here:
-
-**Wiki:**
 https://github.com/JessiMarosi/SchoolRepo-AndroidApp/wiki
 
 ---
 
 ## Summary
 
-DailyDish demonstrates the practical application of Android mobile development principles including:
+DailyDish demonstrates real-world mobile development practices including:
 
-* UI/UX design
-* CRUD implementation
-* Data persistence
-* Modular architecture
-* Documentation/version control
-* Privacy-conscious application design
+* UI/UX design  
+* CRUD implementation  
+* Data persistence  
+* Modular architecture  
+* Personalization systems  
+* Notification handling  
+* Privacy-conscious design  
 
-The project evolved from concept and wireframes into a fully functioning Android application that reflects real-world software development practices.
+The project evolved into a polished, user-focused Android application that balances functionality, simplicity, and thoughtful design.
