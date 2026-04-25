@@ -4,9 +4,13 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +30,21 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_ADD_MEAL = 1;
     private static final int REQUEST_CODE_EDIT_MEAL = 2;
+
     private static final String PREFS_NAME = "DailyDishPrefs";
     private static final String MEALS_KEY = "meals_json";
+    private static final String USERNAME_KEY = "user_name";
+    private static final String ONBOARDING_COMPLETE_KEY = "onboarding_complete";
+    private static final String COLOR_SCHEME_KEY = "color_scheme";
     private static final int RETENTION_DAYS = 30;
 
+    private LinearLayout mainRoot;
+    private LinearLayout totalsCard;
+
     private TextView tvCurrentDate;
+    private TextView tvUserGreeting;
+    private TextView tvDailyTotalsTitle;
+    private TextView tvTodaysMealsTitle;
     private TextView tvTotalCalories;
     private TextView tvTotalProtein;
     private TextView tvTotalCarbs;
@@ -39,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvTotalWater;
     private TextView tvTotalSoda;
 
+    private ImageButton btnSettingsGear;
     private Button btnAddMeal;
     private Button btnEditMeal;
     private Button btnDeleteMeal;
@@ -55,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean onboardingComplete = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getBoolean(ONBOARDING_COMPLETE_KEY, false);
+
+        if (!onboardingComplete) {
+            startActivity(new Intent(MainActivity.this, OnboardingActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -67,7 +92,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        mainRoot = findViewById(R.id.mainRoot);
+        totalsCard = findViewById(R.id.totalsCard);
+
         tvCurrentDate = findViewById(R.id.tvCurrentDate);
+        tvUserGreeting = findViewById(R.id.tvUserGreeting);
+        tvDailyTotalsTitle = findViewById(R.id.tvDailyTotalsTitle);
+        tvTodaysMealsTitle = findViewById(R.id.tvTodaysMealsTitle);
         tvTotalCalories = findViewById(R.id.tvTotalCalories);
         tvTotalProtein = findViewById(R.id.tvTotalProtein);
         tvTotalCarbs = findViewById(R.id.tvTotalCarbs);
@@ -76,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         tvTotalWater = findViewById(R.id.tvTotalWater);
         tvTotalSoda = findViewById(R.id.tvTotalSoda);
 
+        btnSettingsGear = findViewById(R.id.btnSettingsGear);
         btnAddMeal = findViewById(R.id.btnAddMeal);
         btnEditMeal = findViewById(R.id.btnEditMeal);
         btnDeleteMeal = findViewById(R.id.btnDeleteMeal);
@@ -105,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             adapter.notifyDataSetChanged();
+        });
+
+        btnSettingsGear.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         });
 
         btnAddMeal.setOnClickListener(v -> {
@@ -153,14 +189,104 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnStatistics.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, StatisticsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, StatisticsActivity.class));
         });
 
         scheduleDailyReminder();
 
         loadMeals();
         updateUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyUserSettings();
+        loadMeals();
+        updateUI();
+    }
+
+    private void applyUserSettings() {
+        String userName = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getString(USERNAME_KEY, "");
+
+        if (userName != null && !userName.trim().isEmpty()) {
+            tvUserGreeting.setText("Welcome, " + userName.trim() + "!");
+        } else {
+            tvUserGreeting.setText("Welcome!");
+        }
+
+        String colorScheme = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getString(COLOR_SCHEME_KEY, "purple");
+
+        int backgroundColor;
+        int cardColor;
+        int primaryButtonColor;
+        int editButtonColor;
+        int deleteButtonColor;
+        int statsButtonColor;
+        int textColor;
+        int secondaryTextColor;
+
+        if ("blue".equals(colorScheme)) {
+            backgroundColor = Color.parseColor("#F2F7FC");
+            cardColor = Color.parseColor("#E5F0FA");
+            primaryButtonColor = Color.parseColor("#3F6FA6");
+            editButtonColor = Color.parseColor("#6F91BF");
+            deleteButtonColor = Color.parseColor("#B24C63");
+            statsButtonColor = Color.parseColor("#2F5D8C");
+            textColor = Color.parseColor("#17324D");
+            secondaryTextColor = Color.parseColor("#315B7D");
+        } else if ("green".equals(colorScheme)) {
+            backgroundColor = Color.parseColor("#F3FAF5");
+            cardColor = Color.parseColor("#E2F3E7");
+            primaryButtonColor = Color.parseColor("#4F8A5B");
+            editButtonColor = Color.parseColor("#75A87E");
+            deleteButtonColor = Color.parseColor("#B24C63");
+            statsButtonColor = Color.parseColor("#3D6E49");
+            textColor = Color.parseColor("#1F3D28");
+            secondaryTextColor = Color.parseColor("#4C7455");
+        } else if ("rose".equals(colorScheme)) {
+            backgroundColor = Color.parseColor("#FFF4F6");
+            cardColor = Color.parseColor("#F8E2E7");
+            primaryButtonColor = Color.parseColor("#B24C63");
+            editButtonColor = Color.parseColor("#C7798A");
+            deleteButtonColor = Color.parseColor("#9F3F54");
+            statsButtonColor = Color.parseColor("#7D5A8C");
+            textColor = Color.parseColor("#4A1F2B");
+            secondaryTextColor = Color.parseColor("#7D4454");
+        } else {
+            backgroundColor = Color.parseColor("#F7F4FB");
+            cardColor = Color.parseColor("#EEE8F8");
+            primaryButtonColor = Color.parseColor("#6E53A3");
+            editButtonColor = Color.parseColor("#8A74B9");
+            deleteButtonColor = Color.parseColor("#B24C63");
+            statsButtonColor = Color.parseColor("#4F7CAC");
+            textColor = Color.parseColor("#2E1A47");
+            secondaryTextColor = Color.parseColor("#3F3154");
+        }
+
+        mainRoot.setBackgroundColor(backgroundColor);
+        totalsCard.setBackgroundColor(cardColor);
+
+        tvUserGreeting.setTextColor(textColor);
+        tvDailyTotalsTitle.setTextColor(textColor);
+        tvTodaysMealsTitle.setTextColor(textColor);
+        tvCurrentDate.setTextColor(secondaryTextColor);
+
+        tvTotalCalories.setTextColor(secondaryTextColor);
+        tvTotalProtein.setTextColor(secondaryTextColor);
+        tvTotalCarbs.setTextColor(secondaryTextColor);
+        tvTotalSugar.setTextColor(secondaryTextColor);
+        tvTotalFat.setTextColor(secondaryTextColor);
+        tvTotalWater.setTextColor(secondaryTextColor);
+        tvTotalSoda.setTextColor(secondaryTextColor);
+
+        btnSettingsGear.setColorFilter(textColor);
+        btnAddMeal.setBackgroundTintList(ColorStateList.valueOf(primaryButtonColor));
+        btnEditMeal.setBackgroundTintList(ColorStateList.valueOf(editButtonColor));
+        btnDeleteMeal.setBackgroundTintList(ColorStateList.valueOf(deleteButtonColor));
+        btnStatistics.setBackgroundTintList(ColorStateList.valueOf(statsButtonColor));
     }
 
     private void scheduleDailyReminder() {
@@ -193,13 +319,6 @@ public class MainActivity extends AppCompatActivity {
                     pendingIntent
             );
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadMeals();
-        updateUI();
     }
 
     @Override

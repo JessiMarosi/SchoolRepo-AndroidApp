@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="12dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -22,8 +23,9 @@
             android:src="@mipmap/ic_launcher_round" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -43,9 +45,30 @@
                 android:textColor="#6D5A86"
                 android:textSize="13sp" />
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnSettingsGear"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Settings"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_settings_gear" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvUserGreeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="Welcome!"
+        android:textColor="#2E1A47"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
     <LinearLayout
+        android:id="@+id/totalsCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
@@ -54,6 +77,7 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/tvDailyTotalsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -127,6 +151,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvTodaysMealsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
