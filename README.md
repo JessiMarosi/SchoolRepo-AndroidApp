@@ -1,4 +1,4 @@
-# SchoolRepo-AndroidApp: Daily Dish
+# SchoolRepo-AndroidApp
 
 Spring 2 - 2026 Android App Project
 
@@ -45,9 +45,9 @@ Many meal-tracking apps become overly complex, cluttered, or difficult to mainta
 ## Platform / Development Environment
 
 * Native Android Application  
-* Developed using Android Studio  
-* Programming Language: Java  
-* User Interface: XML Layouts  
+* Android Studio  
+* Java  
+* XML Layouts  
 
 ---
 
@@ -100,13 +100,11 @@ Statistics page calculates:
 
 ## New Enhancements (Version 6.0 – Personalization & UX Refinement)
 
-Recent improvements significantly enhanced usability, personalization, and UI polish:
-
 ### User Personalization
 
 * One-time onboarding to capture user name  
 * Personalized greeting on home screen  
-* Personalized push notifications  
+* Personalized notifications  
 
 ---
 
@@ -114,7 +112,7 @@ Recent improvements significantly enhanced usability, personalization, and UI po
 
 * Dedicated Settings screen accessible via gear icon  
 * Edit username at any time  
-* Toggle daily notifications (on/off)  
+* Toggle notifications (on/off)  
 * Select color theme  
 
 ---
@@ -132,11 +130,13 @@ Themes apply instantly and persist across sessions.
 
 ---
 
-### Notification System
+### Push Notification System
 
-* Daily reminder notifications  
-* Runtime permission handling (Android 13+)  
-* Personalized notification messages  
+* Daily push notification scheduled for **7:00 PM (user’s local time)**  
+* Runtime permission handling for Android 13+  
+* Personalized notification messages using stored username  
+
+The notification is intentionally scheduled for the end of the day to align with natural user behavior. This encourages users to log any remaining meals before the day concludes, improving consistency without being intrusive.
 
 ---
 
@@ -146,7 +146,7 @@ Themes apply instantly and persist across sessions.
 * Automatic meal deselection  
 * Improved meal list ordering (newest first)  
 * Consistent font sizing and alignment in Daily Totals  
-* Standard Android settings icon for familiarity  
+* Standard Android settings icon  
 
 ---
 
@@ -154,100 +154,65 @@ Themes apply instantly and persist across sessions.
 
 ### MainActivity
 
-Responsible for:
-
-* Displaying current day meal totals  
-* Displaying saved meals  
-* Showing personalized greeting  
-* Navigation to Add/Edit, Statistics, and Settings  
+* Displays daily totals and meals  
+* Shows personalized greeting  
+* Handles navigation  
 
 ---
 
 ### AddMealActivity
 
-Responsible for:
-
-* Adding new meals  
-* Editing existing meals  
-* Canceling entry and returning home  
+* Adds and edits meals  
+* Supports cancel functionality  
 
 ---
 
 ### StatisticsActivity
 
-Responsible for:
-
-* Displaying aggregated statistics  
-* Returning user to home screen  
+* Displays aggregated data  
 
 ---
 
 ### OnboardingActivity
 
-Responsible for:
-
 * First-time user setup  
-* Capturing and storing username  
 
 ---
 
 ### SettingsActivity
 
-Responsible for:
-
-* Managing user preferences  
-* Updating username  
-* Toggling notifications  
-* Selecting color themes  
+* Manages user preferences  
+* Handles themes, name, and notifications  
 
 ---
 
 ### ReminderReceiver
 
-Responsible for:
-
-* Handling scheduled notifications  
-* Personalizing notification messages  
-
----
-
-## Data Model
-
-Each meal entry contains:
-
-* Meal Name  
-* Category  
-* Calories  
-* Protein  
-* Carbs  
-* Sugar  
-* Fat  
-* Water  
-* Soda  
-* Date  
+* Handles scheduled push notifications  
+* Personalizes reminder messages  
 
 ---
 
 ## Data Storage Approach
 
-DailyDish currently uses:
+DailyDish uses:
 
-* **SharedPreferences local storage**
+* SharedPreferences (local storage)
 
 Benefits:
 
-* Lightweight implementation  
-* Fast read/write performance  
-* No internet/server dependency  
-* Supports user personalization settings  
+* Lightweight  
+* Fast  
+* No server dependency  
+* Supports user personalization  
 
 ---
 
 ## Data Retention Policy
 
-* Meal data is retained for **30 days only**  
-* Older records are automatically removed  
-* Reduces unnecessary long-term storage of user behavior  
+* Meal data retained for **30 days only**  
+* Older records automatically removed  
+* Supports privacy-focused design  
 
 ---
 
@@ -257,78 +222,45 @@ The app was designed around:
 
 * Simplicity  
 * Readability  
-* Minimal user friction  
-* Clear navigation  
-* Fast interaction flow  
-
-Design includes:
-
-* Card-based layouts  
-* Scrollable forms  
-* Clearly labeled nutritional fields  
-* Consistent button styling  
-* Dynamic theming  
+* Minimal friction  
+* Fast interaction  
+* Real-world user behavior  
 
 ---
 
 ## Version Changelog
 
-### Version 1.0 – Initial Concept
-
-* Defined app purpose  
-* Planned core features  
-
----
+### Version 1.0 – Concept
+Initial planning and idea
 
 ### Version 2.0 – Design
+Wireframes and structure
 
-* Created wireframes  
-* Planned navigation and structure  
+### Version 3.0 – Core Build
+CRUD + tracking
 
----
+### Version 4.0 – UI Improvements
+Navigation + layout
 
-### Version 3.0 – Core Development
-
-* Implemented CRUD operations  
-* Added nutrition tracking  
-* Added local storage  
-
----
-
-### Version 4.0 – UI Enhancements
-
-* Improved layouts and navigation  
-* Added cancel/home controls  
-
----
-
-### Version 5.0 – Privacy Improvements
-
-* Implemented 30-day data retention  
-* Reduced long-term data storage  
-
----
+### Version 5.0 – Privacy
+30-day retention system
 
 ### Version 6.0 – Personalization & UX Refinement
 
-* Added onboarding system  
-* Introduced settings screen  
-* Implemented color themes  
-* Added notification system  
-* Improved usability and UI consistency  
+* Onboarding system  
+* Settings system  
+* Color themes  
+* Push notification system (7 PM reminder)  
+* UX and UI improvements  
 
 ---
 
 ## Future Enhancements
 
-Potential future improvements:
-
-* SQLite database migration  
-* Cloud synchronization  
-* User authentication  
-* Graph/chart visualization  
-* Recipe integration  
-* Grocery list support  
+* SQLite integration  
+* Cloud sync  
+* Graph visualizations  
+* Recipe tracking  
 
 ---
 
@@ -340,14 +272,13 @@ https://github.com/JessiMarosi/SchoolRepo-AndroidApp/wiki
 
 ## Summary
 
-DailyDish demonstrates real-world mobile development practices including:
+DailyDish demonstrates:
 
-* UI/UX design  
-* CRUD implementation  
+* Android development fundamentals  
+* UI/UX design principles  
 * Data persistence  
-* Modular architecture  
 * Personalization systems  
-* Notification handling  
+* Push notification implementation  
 * Privacy-conscious design  
 
-The project evolved into a polished, user-focused Android application that balances functionality, simplicity, and thoughtful design.
+The application evolved into a polished, user-focused mobile solution balancing simplicity, functionality, and real-world usability.
